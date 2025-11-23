@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for backend-aged-water-7659 on 2025-11-23T03:22:46-05:00
+# fly.toml app configuration file generated for backend-blue-bush-6943 on 2025-11-23T03:33:23-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'backend-aged-water-7659'
+app = 'backend-blue-bush-6943'
 primary_region = 'yyz'
 
 [build]
