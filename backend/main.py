@@ -28,8 +28,8 @@ session_memory: Dict[str, Dict[str, Any]] = {}
 # -------------------------------
 # LOAD ML MODELS (BASE MODEL ONLY)
 # -------------------------------
-MODEL1_PATH = "../model/model2-rf-weighted/rf_weighted_model.pkl"
-SCALER1_PATH = "../model/model2-rf-weighted/robust_scaler_weighted.pkl"
+MODEL1_PATH = "model/model2-rf-weighted/rf_weighted_model.pkl"
+SCALER1_PATH = "model/model2-rf-weighted/robust_scaler_weighted.pkl"
 
 ml_model = joblib.load(MODEL1_PATH)
 scaler = joblib.load(SCALER1_PATH)
