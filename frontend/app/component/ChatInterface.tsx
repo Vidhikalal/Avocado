@@ -108,7 +108,7 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
                     Welcome to Avocado
                   </h3>
                   <p className="text-xl text-charcoal-500 font-light max-w-xl">
-                    AI-powered cost of living intelligence for cities worldwide
+                    "Find out if you can afford to move in a new city with just a prompt!"
                   </p>
                 </div>
               </motion.div>
