@@ -8,7 +8,8 @@ Created a “median” column to calculate the median of the values in each row
 Renaming the column values to one word features:
 EDA:
 ![Cost Distribution](https://github.com/Vidhikalal/Avocado/blob/main/Cost%20Distribution.png)
-![Outlier Analysis for Cost of living Score](https://github.com/Vidhikalal/Avocado/blob/main/Oulier%20Analysis.png)
+![Outlier Analysis for Cost of living Score](https://github.com/Vidhikalal/Avocado/blob/main/Oulier%20Analysis.png) 
+
 Most cities fall between ~4 and ~8
 The whiskers span roughly from ~3 to ~12
 This means typical cities range from:
@@ -23,6 +24,30 @@ Hence, we can say the data is right-skewed
 We can use log-transform may help stabilize variance
 X_scaled = (X - median) / IQR (Inter Quartile range) instead of z = (x - mean) / std
 IQR = Q3 − Q1 (middle 50% of data)
+
+![Important Features Affecting Cost of Living](https://github.com/Vidhikalal/Avocado/blob/main/ImportantFeatures.png)
+
+Given the distribution:
+3 → low cost
+4–7 → mid cost
+8+ → expensive
+
+Random forest classifier 
+
+      precision    recall  f1-score   support
+
+    Low Cost       0.89      1.00      0.94        16
+ Medium Cost       0.89      0.80      0.84        10
+   High Cost       1.00      0.83      0.91         6
+
+    accuracy                           0.91        32
+   macro avg       0.93      0.88      0.90        32
+weighted avg       0.91      0.91      0.90        32
+
+
+
+
+
 
 
 
