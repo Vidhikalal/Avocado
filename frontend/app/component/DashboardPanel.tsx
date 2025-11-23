@@ -4,6 +4,7 @@ import { MapPin, Home, ShoppingCart, UtensilsCrossed, Train, Wifi, Sparkles } fr
 import { CostBreakdownCard } from "./CostBreakdownCard";
 import { ShapChart } from "./ShapChart";
 import { GoogleMapView } from "./GoogleMapView";
+import { AvoScore } from "./AvoScore";
 import { motion } from "framer-motion";
 
 interface WeatherData {
@@ -33,6 +34,7 @@ interface CostData {
   internet_utils_cost: number | null;
   lifestyle_cost: number | null;
   weather?: WeatherData | null;
+  score?: number | null;
 }
 
 interface DashboardPanelProps {
@@ -220,6 +222,11 @@ export const DashboardPanel = ({ city, isVisible, costData: apiCostData, isLoadi
             </p>
           </div>
         </motion.div>
+
+        {/* AvoScore */}
+        {(apiCostData?.score !== null && apiCostData?.score !== undefined) && (
+          <AvoScore key={`avoscore-${city}-${apiCostData.score}`} score={apiCostData.score} city={city} />
+        )}
 
         {/* Cost Breakdown */}
         <motion.div 
