@@ -18,9 +18,18 @@ interface ChatInterfaceProps {
   messages: Message[];
   isFullscreen?: boolean;
   isLoading?: boolean;
+  isMobileMinimized?: boolean;
+  onToggleMinimize?: () => void;
 }
 
-export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoading = false }: ChatInterfaceProps) => {
+export const ChatInterface = ({ 
+  onQuery, 
+  messages, 
+  isFullscreen = false, 
+  isLoading = false,
+  isMobileMinimized = false,
+  onToggleMinimize 
+}: ChatInterfaceProps) => {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -39,14 +48,46 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
 
   return (
     <div className="flex flex-col h-full  relative">
+      {/* Mobile Minimize/Maximize Button - Only visible on small screens in split view */}
+      {!isFullscreen && onToggleMinimize && (
+        <motion.button
+          onClick={onToggleMinimize}
+          className="md:hidden absolute top-2 right-2 z-30 bg-avocado-600 hover:bg-avocado-700 text-black rounded-full p-2 shadow-lg"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          {isMobileMinimized ? (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+          ) : (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          )}
+        </motion.button>
+      )}
+      
+      {/* Show minimized bar on mobile when minimized */}
+      {isMobileMinimized && !isFullscreen ? (
+        <div 
+           onClick={onToggleMinimize}
+         className="md:hidden flex items-center justify-between px-4 py-4 mx-2 bg-linear-to-r from-avocado-500 to-mint-500 rounded-3xl">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🥑</span>
+            <span className="text-sm font-medium text-black">Tap to expand chat</span>
+          </div>
+        </div>
+      ) : (
+        <>
       {/* Floating Header Badge for Split View */}
       {!isFullscreen && (
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full glass backdrop-blur-xl shadow-lg">
-            <span className="text-xl">🥑</span>
+          className="absolute top-3 sm:top-4 left-3 sm:left-4 right-3 sm:right-4 z-10 flex items-center justify-between">
+          <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full glass backdrop-blur-xl shadow-lg">
+            <span className="text-lg sm:text-xl">🥑</span>
             <span className="text-xs font-medium text-charcoal-700">Avocado AI</span>
           </div>
         </motion.div>
@@ -57,7 +98,7 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="px-8 pt-6 pb-8">
+          className="px-4 sm:px-6 md:px-8 pt-4 sm:pt-6 pb-6 sm:pb-8">
           <div className="flex items-center gap-3">
             <span className="text-2xl">🥑</span>
             <div>
@@ -69,27 +110,27 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
 
       {/* Messages - with bottom padding for floating input */}
       <div className={`flex-1 overflow-y-auto scrollbar-none ${ 
-        isFullscreen ? 'px-8 pt-8 pb-56' : 'p-6 pt-20 pb-40'
+        isFullscreen ? 'px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 pb-48 sm:pb-56' : 'p-4 sm:p-6 pt-16 sm:pt-20 pb-36 sm:pb-40'
       }`}>
         {messages.length === 0 ? (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className={`flex flex-col items-center h-full text-center px-4 ${
-              isFullscreen ? 'justify-end pb-8' : 'justify-center space-y-8'
+            className={`flex flex-col items-center h-full text-center px-3 sm:px-4 ${
+              isFullscreen ? 'justify-end pb-6 sm:pb-8' : 'justify-center space-y-6 sm:space-y-8'
             }`}>
             
-            <div className="space-y-10 max-w-3xl">
+            <div className="space-y-6 sm:space-y-10 max-w-3xl">
               {/* Minimal Floating Welcome - Gemini style */}
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="flex flex-col items-center gap-6"
+                className="flex flex-col items-center gap-4 sm:gap-6"
               >
                 <motion.div 
-                  className="text-7xl"
+                  className="text-5xl sm:text-6xl md:text-7xl"
                   animate={{ 
                     y: [-8, 8, -8],
                     rotate: [-5, 5, -5]
@@ -103,11 +144,11 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
                   🥑
                 </motion.div>
 
-                <div className="space-y-4 pb-10 text-center">
-                  <h3 className="text-5xl text-charcoal-800 font-light tracking-tight">
+                <div className="space-y-3 sm:space-y-4 text-center mb-20 sm:mb-12 px-2">
+                  <h3 className="text-3xl sm:text-4xl md:text-5xl text-charcoal-800 font-light tracking-tight">
                     Welcome to Avocado
                   </h3>
-                  <p className="text-xl text-charcoal-500 font-light max-w-xl">
+                  <p className="text-base sm:text-lg md:text-xl text-charcoal-500 font-light max-w-xl px-2">
                     "Find out if you can afford to move in a new city with just a prompt!"
                   </p>
                 </div>
@@ -116,7 +157,7 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
           </motion.div>
         ) : (
           <AnimatePresence mode="popLayout">
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
           {messages.map((message, index) => (
             <motion.div
               key={message.id}
@@ -135,7 +176,7 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
               )}
               <motion.div
                 whileHover={{ scale: 1.01 }}
-                className={`rounded-2xl px-4 py-3 max-w-[80%] ${
+                className={`rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 max-w-[85%] sm:max-w-[80%] ${
                   message.type === "user"
                     ? "glass-strong text-charcoal-800 shadow-lg"
                     : "glass-card text-charcoal-700 shadow-md"
@@ -158,7 +199,7 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
         className={`absolute bottom-0 left-0 right-0 z-20 flex justify-center ${
-          isFullscreen ? 'p-8 pb-12' : 'p-6'
+          isFullscreen ? 'p-4 sm:p-6 md:p-8 pb-8 sm:pb-12' : 'p-3 sm:p-4 md:p-6'
         }`}
       >
         <div className={cn(
@@ -186,8 +227,8 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
                 className={cn(
                   "w-full border  bg-transparent focus:bg-transparent  focus-visible:outline-none transition-all disabled:opacity-50 placeholder:text-charcoal-400 rounded-3xl resize-none align-top",
                   isFullscreen && messages.length === 0 
-                    ? "h-32 pl-6 pr-6 pt-4 text-lg"
-                    : "h-24 pl-5 pr-4 pt-3 text-sm"
+                    ? "h-24 sm:h-28 md:h-32 pl-4 sm:pl-5 md:pl-6 pr-4 sm:pr-5 md:pr-6 pt-3 sm:pt-3.5 md:pt-4 text-base sm:text-lg"
+                    : "h-20 sm:h-22 md:h-24 pl-4 sm:pl-5 pr-3 sm:pr-4 pt-2.5 sm:pt-3 text-sm"
                 )}
               />
             </form>
@@ -198,7 +239,7 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="flex flex-wrap gap-2 justify-center mt-3 px-4 pb-2"
+                className="flex flex-wrap gap-2 justify-center mt-3 sm:mt-4 px-2 sm:px-4 pb-2"
               >
                 <button
                   type="button"
@@ -253,6 +294,8 @@ export const ChatInterface = ({ onQuery, messages, isFullscreen = false, isLoadi
           </div>
         </div>
       </motion.div>
+      </>
+      )}
     </div>
   );
 };

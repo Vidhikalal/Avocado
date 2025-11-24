@@ -35,6 +35,7 @@ interface CostData {
   lifestyle_cost: number | null;
   weather?: WeatherData | null;
   score?: number | null;
+  reply?: string | null;
 }
 
 interface DashboardPanelProps {
@@ -194,8 +195,8 @@ export const DashboardPanel = ({ city, isVisible, costData: apiCostData, isLoadi
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
-        className="h-[45%] overflow-y-auto glass border-t border-avocado-200/30 pr-105">
-        <div className="p-6 space-y-5">
+        className="h-[45%] overflow-y-auto glass border-t border-avocado-200/30 pr-2 md:pr-104">
+        <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-5">
         {/* Total Cost Card */}
         <motion.div 
           key={`${city}-${costData.total}`}
@@ -236,7 +237,7 @@ export const DashboardPanel = ({ city, isVisible, costData: apiCostData, isLoadi
           transition={{ duration: 0.5, delay: 0.6 }}
           className="space-y-3">
           <h3 className="text-base font-semibold text-charcoal-800 tracking-tight">Cost Breakdown</h3>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
             {costData.breakdown.map((item, index) => (
               <motion.div
                 key={`${item.category}-${item.amount}`}
@@ -307,13 +308,37 @@ export const DashboardPanel = ({ city, isVisible, costData: apiCostData, isLoadi
           <div className="space-y-2">
             <h4 className="text-sm font-semibold text-charcoal-800 tracking-tight">Summary</h4>
             <p className="text-xs text-charcoal-600 leading-relaxed font-light">
-              {city}'s cost of living is driven primarily by housing costs, which are significantly
+              {apiCostData?.reply || `${city}'s cost of living is driven primarily by housing costs, which are significantly
               above average. Restaurant prices and entertainment also contribute to higher expenses.
               However, efficient public transportation and reasonable utility costs help offset some
-              expenses.
+              expenses.`}
             </p>
           </div>
         </div>
+        <footer className="mt-4 pb-30">
+          <div className="rounded-xl bg-avocado-50/40 border border-avocado-200/30 glass-card px-3 sm:px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs text-charcoal-600 shadow-sm">
+            <div className="flex items-center gap-2 flex-wrap">
+          
+              <span className="text-charcoal-500">built with love for 🥑  by</span>
+              <div className="flex items-center gap-1 flex-wrap">
+                <span className="font-semibold text-charcoal-800">Aman Purohit</span>
+                <span className="text-charcoal-500">,</span>
+                <span className="font-semibold text-charcoal-800">Vidhi Kalal</span>
+                <span className="text-charcoal-500"> &amp; </span>
+                <span className="font-semibold text-charcoal-800">Prabal Manchanda</span>
+              </div>
+            </div>
+            <div className="text-left sm:text-right">
+              <a
+          href="#"
+          className="text-avocado-600 hover:underline text-xs"
+          aria-label="View project"
+              >
+          Learn more about this project
+              </a>
+            </div>
+          </div>
+        </footer>
         </div>
       </motion.div>
     </motion.div>

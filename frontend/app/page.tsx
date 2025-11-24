@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChatInterface } from "./component/ChatInterface";
 import { DashboardPanel } from "./component/DashboardPanel";
 import { motion, AnimatePresence } from "framer-motion";
@@ -50,6 +50,23 @@ export default function Home() {
   const [showSplitView, setShowSplitView] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [costData, setCostData] = useState<ChatResponse | null>(null);
+  const [isChatMinimized, setIsChatMinimized] = useState(false);
+  
+  // Check if mobile on mount and in split view
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobile = window.innerWidth < 768; // md breakpoint
+      if (showSplitView && isMobile) {
+        setIsChatMinimized(true);
+      } else {
+        setIsChatMinimized(false);
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [showSplitView]);
 
   const handleQuery = async (query: string) => {
     // Generate new session ID for every request with more entropy
@@ -208,15 +225,16 @@ export default function Home() {
         layout
         initial={false}
         animate={{
-          width: showSplitView ? '400px' : '100%',
-          maxWidth: showSplitView ? '400px' : '800px',
-          right: showSplitView ? '24px' : 'auto',
+          width: showSplitView ? 'min(400px, 100vw)' : '100%',
+          maxWidth: showSplitView ? 'min(400px, calc(100vw - 16px))' : 'min(800px, calc(100vw - 32px))',
+          right: showSplitView ? 'max(8px, min(24px, 2vw))' : 'auto',
           left: showSplitView ? 'auto' : '50%',
           x: showSplitView ? '0%' : '-50%',
-          top: showSplitView ? '24px' : '50%',
+          bottom: isChatMinimized && showSplitView ? 'max(8px, min(24px, 2vh))' : 'auto',
+          top: isChatMinimized && showSplitView ? 'auto' : (showSplitView ? 'max(8px, min(24px, 2vh))' : '50%'),
           y: showSplitView ? '0%' : '-50%',
-          height: showSplitView ? 'calc(100vh - 48px)' : 'auto',
-          maxHeight: showSplitView ? 'calc(100vh - 48px)' : '85vh',
+          height: showSplitView ? (isChatMinimized ? '60px' : 'calc(100vh - max(16px, min(48px, 4vh)))') : 'auto',
+          maxHeight: showSplitView ? 'calc(100vh - max(16px, min(48px, 4vh)))' : '85vh',
         }}
         transition={{ 
           type: "spring", 
@@ -239,6 +257,8 @@ export default function Home() {
             messages={messages} 
             isFullscreen={!showSplitView}
             isLoading={isLoading}
+            isMobileMinimized={isChatMinimized}
+            onToggleMinimize={() => setIsChatMinimized(!isChatMinimized)}
           />
         </motion.div>
       </motion.div>
